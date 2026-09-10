@@ -1835,6 +1835,21 @@ document
 checkAdminSession();
 
 </script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .then(() => {
+        console.log("UltraDouble Service Worker activé !");
+      })
+      .catch(error => {
+        console.error("Erreur Service Worker :", error);
+      });
+  });
+}
+</script>
 
+</body>
+</html>
 </body>
 </html>
