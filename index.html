@@ -4,128 +4,355 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>UltraDouble Seed Generator</title>
+<title>UltraDouble • Client Seed Generator</title>
 
 <style>
 * {
     box-sizing: border-box;
 }
 
+:root {
+    --bg: #05070d;
+    --card: rgba(13, 18, 32, 0.88);
+    --border: rgba(95, 112, 160, 0.25);
+    --text: #f4f7ff;
+    --muted: #8490ad;
+    --purple: #8b5cf6;
+    --cyan: #22d3ee;
+    --green: #22c55e;
+}
+
 body {
     margin: 0;
+    min-height: 100vh;
     font-family: Arial, sans-serif;
-    background: #080d18;
-    color: white;
+    color: var(--text);
+    background:
+        radial-gradient(circle at 20% 20%, rgba(139,92,246,.16), transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(34,211,238,.10), transparent 30%),
+        var(--bg);
+    overflow-x: hidden;
 }
+
+/* PARTICULES */
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: .18;
+    pointer-events: none;
+    animation: float 8s ease-in-out infinite alternate;
+}
+
+body::before {
+    background: var(--purple);
+    top: -150px;
+    left: -100px;
+}
+
+body::after {
+    background: var(--cyan);
+    bottom: -150px;
+    right: -100px;
+    animation-delay: 2s;
+}
+
+@keyframes float {
+    from { transform: translate(0,0); }
+    to { transform: translate(50px,30px); }
+}
+
+/* HEADER */
 
 header {
     text-align: center;
-    padding: 25px 15px;
-    background: #10182a;
-    border-bottom: 1px solid #273552;
+    padding: 35px 15px 25px;
+}
+
+.logo {
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--cyan);
+    font-weight: bold;
 }
 
 header h1 {
-    margin: 0;
-    font-size: 27px;
+    margin: 8px 0;
+    font-size: 38px;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #fff, #a78bfa, #67e8f9);
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
 header p {
-    color: #9ba8c5;
-    margin-bottom: 0;
+    margin: 0;
+    color: var(--muted);
 }
+
+/* CONTAINER */
 
 .container {
-    max-width: 650px;
+    width: min(700px, calc(100% - 30px));
     margin: auto;
-    padding: 20px;
 }
 
+/* CARDS */
+
 .card {
-    background: #111a2d;
-    border: 1px solid #293653;
-    border-radius: 18px;
-    padding: 22px;
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 24px;
     margin-bottom: 18px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 20px 60px rgba(0,0,0,.35);
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+/* SEED */
+
+.seed-container {
+    position: relative;
+    padding: 2px;
+    border-radius: 16px;
+    background: linear-gradient(
+        90deg,
+        var(--purple),
+        var(--cyan),
+        var(--purple)
+    );
+    background-size: 200% 100%;
+    animation: borderMove 4s linear infinite;
+}
+
+@keyframes borderMove {
+    to {
+        background-position: 200% 0;
+    }
 }
 
 .seed-box {
-    background: #080e1c;
-    border: 1px solid #344363;
-    border-radius: 12px;
-    padding: 18px;
+    background: #070b14;
+    border-radius: 14px;
+    padding: 25px 15px;
     text-align: center;
-    word-break: break-all;
+    overflow: hidden;
 }
 
 .seed {
-    font-size: 19px;
+    font-family: "Courier New", monospace;
+    font-size: clamp(15px, 4vw, 22px);
     font-weight: bold;
     letter-spacing: 1px;
+    word-break: break-all;
 }
+
+.seed .fixed {
+    color: #9ca8c4;
+}
+
+.seed .dynamic {
+    color: #67e8f9;
+    text-shadow:
+        0 0 8px rgba(34,211,238,.8),
+        0 0 20px rgba(34,211,238,.4);
+}
+
+/* GENERATING */
+
+.generating {
+    animation: pulse .35s infinite alternate;
+}
+
+@keyframes pulse {
+    from {
+        opacity: .45;
+        transform: scale(.99);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1.01);
+    }
+}
+
+/* BUTTONS */
 
 button {
     width: 100%;
     border: none;
-    border-radius: 11px;
-    padding: 15px;
-    margin-top: 12px;
-    font-size: 16px;
+    border-radius: 13px;
+    padding: 16px;
+    margin-top: 14px;
+    color: white;
+    font-size: 15px;
     font-weight: bold;
     cursor: pointer;
+    transition: .2s;
 }
 
-.generate {
-    background: #7357df;
-    color: white;
-}
-
-.copy {
-    background: #168f62;
-    color: white;
-}
-
-.clear {
-    background: #293653;
-    color: white;
+button:hover {
+    transform: translateY(-2px);
 }
 
 button:active {
-    transform: scale(0.98);
+    transform: scale(.98);
 }
 
-.info {
-    color: #9ba8c5;
-    font-size: 13px;
-    line-height: 1.6;
+.generate {
+    background: linear-gradient(90deg, #7c3aed, #8b5cf6, #6366f1);
+    box-shadow: 0 8px 25px rgba(124,58,237,.25);
 }
+
+.copy {
+    background: linear-gradient(90deg, #059669, #10b981);
+}
+
+.clear {
+    background: #182238;
+    color: #aab5cf;
+}
+
+/* STATUS */
+
+.status {
+    min-height: 25px;
+    text-align: center;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--green);
+}
+
+/* SECURITY */
+
+.security {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 13px;
+    border-radius: 12px;
+    background: rgba(34,197,94,.06);
+    border: 1px solid rgba(34,197,94,.15);
+}
+
+.security-icon {
+    font-size: 22px;
+}
+
+.security strong {
+    display: block;
+    font-size: 13px;
+}
+
+.security span {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* COUNTER */
 
 .counter {
     text-align: center;
-    font-size: 15px;
-    color: #b7c2dc;
+    color: var(--muted);
 }
 
+.counter strong {
+    display: block;
+    margin-top: 5px;
+    font-size: 30px;
+    color: white;
+}
+
+/* HISTORY */
+
 .history {
-    max-height: 350px;
+    max-height: 370px;
     overflow-y: auto;
 }
 
 .history-item {
-    background: #080e1c;
-    border: 1px solid #263450;
-    border-radius: 10px;
-    padding: 12px;
+    position: relative;
+    background: #080d18;
+    border: 1px solid rgba(80,100,145,.18);
+    border-radius: 12px;
+    padding: 13px;
     margin-bottom: 9px;
+    animation: appear .3s ease;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.history-seed {
+    color: #67e8f9;
     font-family: monospace;
-    font-size: 13px;
+    font-size: 12px;
     word-break: break-all;
 }
 
-.warning {
-    color: #e8b85d;
+.history-date {
+    color: #69758f;
+    font-size: 10px;
+    margin-top: 5px;
+}
+
+.empty {
+    color: var(--muted);
     text-align: center;
-    font-size: 12px;
+    font-size: 13px;
+}
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    color: #58647c;
+    font-size: 11px;
+    padding: 10px 20px 30px;
+}
+
+.warning {
+    color: #d7a94d;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* MOBILE */
+
+@media (max-width: 500px) {
+
+    header h1 {
+        font-size: 30px;
+    }
+
+    .card {
+        padding: 18px;
+        border-radius: 18px;
+    }
+
+    .seed-box {
+        padding: 20px 10px;
+    }
+
 }
 </style>
 </head>
@@ -133,88 +360,144 @@ button:active {
 <body>
 
 <header>
-    <h1>⚡ UltraDouble</h1>
+
+    <div class="logo">SECURE RANDOM SYSTEM</div>
+
+    <h1>⚡ ULTRADOUBLE</h1>
+
     <p>Client Seed Generator</p>
+
 </header>
 
 <div class="container">
 
+    <!-- GENERATOR -->
+
     <div class="card">
 
-        <h2>🎲 Nouveau Client Seed</h2>
+        <h2>🎲 Generate Client Seed</h2>
 
-        <div class="seed-box">
-            <div id="seed" class="seed">
-                ULTRA-DOUBLE-00000000-XXXXXXXXXX
+        <div class="seed-container">
+
+            <div class="seed-box">
+
+                <div id="seed" class="seed">
+                    <span class="fixed">
+                        ULTRA-DOUBLE-00000000-
+                    </span>
+                    <span class="dynamic">
+                        XXXXXXXXXX
+                    </span>
+                </div>
+
             </div>
+
         </div>
 
-        <button class="generate" onclick="generateSeed()">
-            🎲 GÉNÉRER UN NOUVEAU SEED
+        <button
+            class="generate"
+            onclick="generateSeed()"
+        >
+            ⚡ GÉNÉRER UN NOUVEAU SEED
         </button>
 
-        <button class="copy" onclick="copySeed()">
+        <button
+            class="copy"
+            onclick="copySeed()"
+        >
             📋 COPIER LE SEED
         </button>
 
-        <p id="message"></p>
+        <div id="status" class="status"></div>
 
-    </div>
+        <div class="security">
 
-    <div class="card">
+            <div class="security-icon">🔐</div>
 
-        <h2>📊 Informations</h2>
+            <div>
+                <strong>Secure Random Generation</strong>
+                <span>
+                    Génération aléatoire cryptographiquement sécurisée
+                </span>
+            </div>
 
-        <p class="counter">
-            Seeds générés :
-            <strong id="counter">0</strong>
-        </p>
-
-        <p class="info">
-            Le dernier bloc de 10 caractères est généré
-            aléatoirement avec le générateur cryptographique
-            sécurisé du navigateur.
-        </p>
-
-        <p class="warning">
-            ⚠️ Ce générateur produit des Client Seeds aléatoires.
-            Il ne garantit pas de gains ni de résultats gagnants.
-        </p>
-
-    </div>
-
-    <div class="card">
-
-        <h2>📜 Historique</h2>
-
-        <div id="history" class="history">
-            <p class="info">Aucun seed généré.</p>
         </div>
 
-        <button class="clear" onclick="clearHistory()">
+    </div>
+
+    <!-- STATS -->
+
+    <div class="card">
+
+        <h2>📊 Generator Stats</h2>
+
+        <div class="counter">
+
+            Seeds générés
+
+            <strong id="counter">0</strong>
+
+        </div>
+
+    </div>
+
+    <!-- HISTORY -->
+
+    <div class="card">
+
+        <h2>📜 Seed History</h2>
+
+        <div id="history" class="history">
+
+            <div class="empty">
+                Aucun seed généré pour le moment.
+            </div>
+
+        </div>
+
+        <button
+            class="clear"
+            onclick="clearHistory()"
+        >
             🗑️ EFFACER L'HISTORIQUE
         </button>
+
+        <p class="warning">
+            ⚠️ Un Client Seed aléatoire ne garantit aucun résultat
+            gagnant et ne modifie pas les probabilités du jeu.
+        </p>
 
     </div>
 
 </div>
 
+<footer>
+    UltraDouble • Educational Random Seed Generator
+</footer>
+
 <script>
 
 const PREFIX = "ULTRA-DOUBLE-00000000-";
-const CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+const CHARACTERS =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 let currentSeed = "";
-let history = JSON.parse(
-    localStorage.getItem("ultraDoubleHistory")
-) || [];
 
-/*
-    Génération cryptographiquement sécurisée
-*/
+let history =
+    JSON.parse(
+        localStorage.getItem("ultraDoubleHistory")
+    ) || [];
+
+
+/* =========================
+   RANDOM CHARACTER
+========================= */
+
 function randomCharacter() {
 
-    const array = new Uint32Array(1);
+    const array =
+        new Uint32Array(1);
 
     crypto.getRandomValues(array);
 
@@ -223,86 +506,195 @@ function randomCharacter() {
     ];
 }
 
+
+/* =========================
+   RANDOM BLOCK
+========================= */
+
 function generateRandomBlock() {
 
     let block = "";
 
     for (let i = 0; i < 10; i++) {
+
         block += randomCharacter();
+
     }
 
     return block;
 }
 
-function generateSeed() {
 
-    let newSeed;
+/* =========================
+   SEED DISPLAY
+========================= */
 
-    do {
+function displaySeed(seed) {
 
-        newSeed =
-            PREFIX +
-            generateRandomBlock();
+    const dynamic =
+        seed.substring(PREFIX.length);
 
-    } while (newSeed === currentSeed);
+    document.getElementById("seed").innerHTML =
 
-    currentSeed = newSeed;
-
-    history.unshift({
-        seed: newSeed,
-        date: new Date().toLocaleString("fr-FR")
-    });
-
-    /*
-        On garde seulement les 50 derniers seeds
-    */
-    if (history.length > 50) {
-        history.pop();
-    }
-
-    localStorage.setItem(
-        "ultraDoubleHistory",
-        JSON.stringify(history)
-    );
-
-    document.getElementById("seed").textContent =
-        currentSeed;
-
-    document.getElementById("counter").textContent =
-        history.length;
-
-    renderHistory();
-
-    document.getElementById("message").textContent =
-        "✅ Nouveau seed généré";
+        `<span class="fixed">
+            ${PREFIX}
+         </span>
+         <span class="dynamic">
+            ${dynamic}
+         </span>`;
 
 }
 
+
+/* =========================
+   GENERATE
+========================= */
+
+function generateSeed() {
+
+    const seedElement =
+        document.getElementById("seed");
+
+    const status =
+        document.getElementById("status");
+
+    const button =
+        document.querySelector(".generate");
+
+    button.disabled = true;
+
+    status.textContent =
+        "⚡ Génération en cours...";
+
+    seedElement.classList.add("generating");
+
+    let animationCount = 0;
+
+    const animation =
+        setInterval(() => {
+
+            const fakeBlock =
+                generateRandomBlock();
+
+            displaySeed(
+                PREFIX + fakeBlock
+            );
+
+            animationCount++;
+
+            if (animationCount >= 10) {
+
+                clearInterval(animation);
+
+                let newSeed;
+
+                do {
+
+                    newSeed =
+                        PREFIX +
+                        generateRandomBlock();
+
+                } while (
+                    newSeed === currentSeed
+                );
+
+                currentSeed = newSeed;
+
+                history.unshift({
+
+                    seed: newSeed,
+
+                    date:
+                        new Date()
+                        .toLocaleString("fr-FR")
+
+                });
+
+                if (history.length > 50) {
+
+                    history.pop();
+
+                }
+
+                localStorage.setItem(
+                    "ultraDoubleHistory",
+                    JSON.stringify(history)
+                );
+
+                displaySeed(currentSeed);
+
+                seedElement.classList.remove(
+                    "generating"
+                );
+
+                status.textContent =
+                    "✓ Nouveau seed généré";
+
+                button.disabled = false;
+
+                updateCounter();
+
+                renderHistory();
+
+            }
+
+        }, 70);
+
+}
+
+
+/* =========================
+   COPY
+========================= */
+
 function copySeed() {
+
+    const status =
+        document.getElementById("status");
 
     if (!currentSeed) {
 
-        document.getElementById("message").textContent =
-            "⚠️ Génère d'abord un seed";
+        status.textContent =
+            "⚠️ Génère d'abord un seed.";
 
         return;
+
     }
 
-    navigator.clipboard.writeText(currentSeed)
+    navigator.clipboard
+        .writeText(currentSeed)
         .then(() => {
 
-            document.getElementById("message").textContent =
-                "✅ Seed copié !";
+            status.textContent =
+                "✓ Seed copié dans le presse-papiers !";
 
         })
         .catch(() => {
 
-            document.getElementById("message").textContent =
-                "⚠️ Impossible de copier automatiquement";
+            status.textContent =
+                "⚠️ Copie automatique impossible.";
 
         });
 
 }
+
+
+/* =========================
+   COUNTER
+========================= */
+
+function updateCounter() {
+
+    document.getElementById(
+        "counter"
+    ).textContent = history.length;
+
+}
+
+
+/* =========================
+   HISTORY
+========================= */
 
 function renderHistory() {
 
@@ -312,9 +704,12 @@ function renderHistory() {
     if (history.length === 0) {
 
         container.innerHTML =
-            '<p class="info">Aucun seed généré.</p>';
+            `<div class="empty">
+                Aucun seed généré pour le moment.
+             </div>`;
 
         return;
+
     }
 
     container.innerHTML = "";
@@ -324,11 +719,18 @@ function renderHistory() {
         const div =
             document.createElement("div");
 
-        div.className = "history-item";
+        div.className =
+            "history-item";
 
         div.innerHTML =
-            `<strong>${item.seed}</strong><br>
-             <small>${item.date}</small>`;
+
+            `<div class="history-seed">
+                ${item.seed}
+             </div>
+
+             <div class="history-date">
+                ${item.date}
+             </div>`;
 
         container.appendChild(div);
 
@@ -336,34 +738,49 @@ function renderHistory() {
 
 }
 
+
+/* =========================
+   CLEAR HISTORY
+========================= */
+
 function clearHistory() {
 
     if (!confirm(
-        "Voulez-vous vraiment supprimer tout l'historique ?"
+        "Voulez-vous vraiment effacer tout l'historique ?"
     )) {
+
         return;
+
     }
 
     history = [];
+
+    currentSeed = "";
 
     localStorage.removeItem(
         "ultraDoubleHistory"
     );
 
-    currentSeed = "";
+    displaySeed(
+        PREFIX + "XXXXXXXXXX"
+    );
 
-    document.getElementById("seed").textContent =
-        "ULTRA-DOUBLE-00000000-XXXXXXXXXX";
-
-    document.getElementById("counter").textContent =
-        "0";
-
-    document.getElementById("message").textContent =
-        "";
+    updateCounter();
 
     renderHistory();
 
+    document.getElementById(
+        "status"
+    ).textContent = "";
+
 }
+
+
+/* =========================
+   START
+========================= */
+
+updateCounter();
 
 renderHistory();
 
