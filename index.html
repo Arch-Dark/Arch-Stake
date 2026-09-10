@@ -1,1 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>UltraDouble Seed Generator</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #080d18;
+    color: white;
+}
+
+header {
+    text-align: center;
+    padding: 25px 15px;
+    background: #10182a;
+    border-bottom: 1px solid #273552;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 27px;
+}
+
+header p {
+    color: #9ba8c5;
+    margin-bottom: 0;
+}
+
+.container {
+    max-width: 650px;
+    margin: auto;
+    padding: 20px;
+}
+
+.card {
+    background: #111a2d;
+    border: 1px solid #293653;
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 18px;
+}
+
+.seed-box {
+    background: #080e1c;
+    border: 1px solid #344363;
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+    word-break: break-all;
+}
+
+.seed {
+    font-size: 19px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+button {
+    width: 100%;
+    border: none;
+    border-radius: 11px;
+    padding: 15px;
+    margin-top: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.generate {
+    background: #7357df;
+    color: white;
+}
+
+.copy {
+    background: #168f62;
+    color: white;
+}
+
+.clear {
+    background: #293653;
+    color: white;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.info {
+    color: #9ba8c5;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.counter {
+    text-align: center;
+    font-size: 15px;
+    color: #b7c2dc;
+}
+
+.history {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.history-item {
+    background: #080e1c;
+    border: 1px solid #263450;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 9px;
+    font-family: monospace;
+    font-size: 13px;
+    word-break: break-all;
+}
+
+.warning {
+    color: #e8b85d;
+    text-align: center;
+    font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>⚡ UltraDouble</h1>
+    <p>Client Seed Generator</p>
+</header>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>🎲 Nouveau Client Seed</h2>
+
+        <div class="seed-box">
+            <div id="seed" class="seed">
+                ULTRA-DOUBLE-00000000-XXXXXXXXXX
+            </div>
+        </div>
+
+        <button class="generate" onclick="generateSeed()">
+            🎲 GÉNÉRER UN NOUVEAU SEED
+        </button>
+
+        <button class="copy" onclick="copySeed()">
+            📋 COPIER LE SEED
+        </button>
+
+        <p id="message"></p>
+
+    </div>
+
+    <div class="card">
+
+        <h2>📊 Informations</h2>
+
+        <p class="counter">
+            Seeds générés :
+            <strong id="counter">0</strong>
+        </p>
+
+        <p class="info">
+            Le dernier bloc de 10 caractères est généré
+            aléatoirement avec le générateur cryptographique
+            sécurisé du navigateur.
+        </p>
+
+        <p class="warning">
+            ⚠️ Ce générateur produit des Client Seeds aléatoires.
+            Il ne garantit pas de gains ni de résultats gagnants.
+        </p>
+
+    </div>
+
+    <div class="card">
+
+        <h2>📜 Historique</h2>
+
+        <div id="history" class="history">
+            <p class="info">Aucun seed généré.</p>
+        </div>
+
+        <button class="clear" onclick="clearHistory()">
+            🗑️ EFFACER L'HISTORIQUE
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+const PREFIX = "ULTRA-DOUBLE-00000000-";
+const CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+let currentSeed = "";
+let history = JSON.parse(
+    localStorage.getItem("ultraDoubleHistory")
+) || [];
+
+/*
+    Génération cryptographiquement sécurisée
+*/
+function randomCharacter() {
+
+    const array = new Uint32Array(1);
+
+    crypto.getRandomValues(array);
+
+    return CHARACTERS[
+        array[0] % CHARACTERS.length
+    ];
+}
+
+function generateRandomBlock() {
+
+    let block = "";
+
+    for (let i = 0; i < 10; i++) {
+        block += randomCharacter();
+    }
+
+    return block;
+}
+
+function generateSeed() {
+
+    let newSeed;
+
+    do {
+
+        newSeed =
+            PREFIX +
+            generateRandomBlock();
+
+    } while (newSeed === currentSeed);
+
+    currentSeed = newSeed;
+
+    history.unshift({
+        seed: newSeed,
+        date: new Date().toLocaleString("fr-FR")
+    });
+
+    /*
+        On garde seulement les 50 derniers seeds
+    */
+    if (history.length > 50) {
+        history.pop();
+    }
+
+    localStorage.setItem(
+        "ultraDoubleHistory",
+        JSON.stringify(history)
+    );
+
+    document.getElementById("seed").textContent =
+        currentSeed;
+
+    document.getElementById("counter").textContent =
+        history.length;
+
+    renderHistory();
+
+    document.getElementById("message").textContent =
+        "✅ Nouveau seed généré";
+
+}
+
+function copySeed() {
+
+    if (!currentSeed) {
+
+        document.getElementById("message").textContent =
+            "⚠️ Génère d'abord un seed";
+
+        return;
+    }
+
+    navigator.clipboard.writeText(currentSeed)
+        .then(() => {
+
+            document.getElementById("message").textContent =
+                "✅ Seed copié !";
+
+        })
+        .catch(() => {
+
+            document.getElementById("message").textContent =
+                "⚠️ Impossible de copier automatiquement";
+
+        });
+
+}
+
+function renderHistory() {
+
+    const container =
+        document.getElementById("history");
+
+    if (history.length === 0) {
+
+        container.innerHTML =
+            '<p class="info">Aucun seed généré.</p>';
+
+        return;
+    }
+
+    container.innerHTML = "";
+
+    history.forEach(item => {
+
+        const div =
+            document.createElement("div");
+
+        div.className = "history-item";
+
+        div.innerHTML =
+            `<strong>${item.seed}</strong><br>
+             <small>${item.date}</small>`;
+
+        container.appendChild(div);
+
+    });
+
+}
+
+function clearHistory() {
+
+    if (!confirm(
+        "Voulez-vous vraiment supprimer tout l'historique ?"
+    )) {
+        return;
+    }
+
+    history = [];
+
+    localStorage.removeItem(
+        "ultraDoubleHistory"
+    );
+
+    currentSeed = "";
+
+    document.getElementById("seed").textContent =
+        "ULTRA-DOUBLE-00000000-XXXXXXXXXX";
+
+    document.getElementById("counter").textContent =
+        "0";
+
+    document.getElementById("message").textContent =
+        "";
+
+    renderHistory();
+
+}
+
+renderHistory();
+
+</script>
+
+</body>
+</html>
