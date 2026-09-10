@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="manifest" href="./manifest.json">
+
 <meta name="theme-color" content="#05070d">
 
 <title>UltraDouble • Client Seed Generator</title>
+
 
 <style>
 
@@ -48,6 +52,7 @@ body {
 
     overflow-x: hidden;
 }
+
 
 /* =========================
    BACKGROUND
@@ -98,6 +103,7 @@ body::after {
     }
 
 }
+
 
 /* =========================
    LOGIN SCREEN
@@ -307,6 +313,7 @@ body::after {
         var(--green);
 }
 
+
 /* =========================
    HEADER
 ========================= */
@@ -357,6 +364,7 @@ header p {
 
     color: var(--muted);
 }
+
 
 /* =========================
    TOP BAR
@@ -430,6 +438,7 @@ header p {
     font-size: 12px;
 }
 
+
 /* =========================
    CONTAINER
 ========================= */
@@ -441,6 +450,7 @@ header p {
 
     margin: auto;
 }
+
 
 /* =========================
    CARDS
@@ -474,6 +484,7 @@ header p {
 
     margin-top: 0;
 }
+
 
 /* =========================
    SEED
@@ -567,6 +578,7 @@ header p {
         rgba(34,211,238,.4);
 }
 
+
 /* =========================
    GENERATING
 ========================= */
@@ -590,6 +602,7 @@ header p {
     }
 
 }
+
 
 /* =========================
    BUTTONS
@@ -673,6 +686,7 @@ button:disabled {
         #aab5cf;
 }
 
+
 /* =========================
    STATUS
 ========================= */
@@ -694,6 +708,7 @@ button:disabled {
     color:
         var(--green);
 }
+
 
 /* =========================
    SECURITY
@@ -751,6 +766,7 @@ button:disabled {
         11px;
 }
 
+
 /* =========================
    COUNTER
 ========================= */
@@ -778,6 +794,7 @@ button:disabled {
     color:
         white;
 }
+
 
 /* =========================
    HISTORY
@@ -872,6 +889,7 @@ button:disabled {
         13px;
 }
 
+
 /* =========================
    FOOTER
 ========================= */
@@ -906,6 +924,7 @@ footer {
         1.5;
 }
 
+
 /* =========================
    MOBILE
 ========================= */
@@ -937,9 +956,12 @@ footer {
 }
 
 </style>
+
 </head>
 
+
 <body>
+
 
 <!-- =========================
      LOGIN
@@ -1015,7 +1037,9 @@ footer {
 
 </header>
 
+
 <div class="container">
+
 
     <!-- ADMIN BAR -->
 
@@ -1072,12 +1096,14 @@ footer {
 
         </div>
 
+
         <button
             class="generate"
             onclick="generateSeed()"
         >
             ⚡ GÉNÉRER UN NOUVEAU SEED
         </button>
+
 
         <button
             class="copy"
@@ -1086,10 +1112,12 @@ footer {
             📋 COPIER LE SEED
         </button>
 
+
         <div
             id="status"
             class="status"
         ></div>
+
 
         <div class="security">
 
@@ -1154,12 +1182,14 @@ footer {
 
         </div>
 
+
         <button
             class="clear"
             onclick="clearHistory()"
         >
             🗑️ EFFACER L'HISTORIQUE
         </button>
+
 
         <p class="warning">
 
@@ -1173,6 +1203,7 @@ footer {
 
 </div>
 
+
 <footer>
 
     UltraDouble • Educational Random Seed Generator
@@ -1182,9 +1213,12 @@ footer {
 </div>
 
 
-<!-- SUPABASE -->
+<!-- =========================
+     SUPABASE
+========================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <script>
 
@@ -1838,20 +1872,47 @@ document
 checkAdminSession();
 
 </script>
+
+
+<!-- =========================
+     SERVICE WORKER
+========================= -->
+
 <script>
+
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js")
-      .then(() => {
-        console.log("UltraDouble Service Worker activé !");
-      })
-      .catch(error => {
-        console.error("Erreur Service Worker :", error);
-      });
-  });
+
+    window.addEventListener(
+        "load",
+        () => {
+
+            navigator.serviceWorker
+                .register("./sw.js")
+
+                .then(() => {
+
+                    console.log(
+                        "UltraDouble Service Worker activé !"
+                    );
+
+                })
+
+                .catch(error => {
+
+                    console.error(
+                        "Erreur Service Worker :",
+                        error
+                    );
+
+                });
+
+        }
+    );
+
 }
+
 </script>
+
 
 </body>
 </html>
-
